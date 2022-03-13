@@ -17,7 +17,7 @@ class TextRenderTests {
    void textRender() throws Exception {
       // 模板文件
       final ClassPathResource templateResource
-         = new ClassPathResource("textTemplate.docx");
+         = new ClassPathResource("1textTemplate.docx");
 
       XWPFTemplate template = XWPFTemplate
          // 编译模板
@@ -55,7 +55,7 @@ class TextRenderTests {
    void textRender2() throws Exception {
       // 模板文件
       final ClassPathResource templateResource
-         = new ClassPathResource("textTemplate.docx");
+         = new ClassPathResource("1textTemplate.docx");
 
       XWPFTemplate template = XWPFTemplate
          // 编译模板
