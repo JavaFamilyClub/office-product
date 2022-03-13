@@ -1,0 +1,6 @@
+spring:
+   application:
+      name: office-product
+
+server:
+   port: 80
