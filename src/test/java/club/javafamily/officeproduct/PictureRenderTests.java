@@ -22,12 +22,6 @@ class PictureRenderTests {
       final ClassPathResource templateResource
          = new ClassPathResource("2imgTemplate.docx");
 
-      final BufferedImage bufImg = new BufferedImage(300, 300, TYPE_INT_RGB);
-      final Graphics graphics = bufImg.getGraphics();
-
-      graphics.setFont(new Font(null, Font.BOLD, 20));
-      graphics.drawString("Buffered Image By Java", 10, 150);
-
       XWPFTemplate template = XWPFTemplate
          // 编译模板
          .compile(templateResource.getInputStream())
@@ -36,11 +30,14 @@ class PictureRenderTests {
             // 渲染模板可以通过 Map 或者 POJO
             new HashMap<String, Object>() {
                {
+                  // 本地图片
                   put("image", "/Users/dreamli/Workspace/MyRepository/javafamily/office-product/src/main/resources/static/jf.png");
+                  // 网络图片
                   put("netImg", Pictures.of("https://img0.baidu.com/it/u=1114868985,1024067529&fm=253&fmt=auto&app=138&f=GIF?w=400&h=237")
                      .size(200, 200)
                      .center()
                      .create());
+                  // 图片流
                   put("streamImg", Pictures.ofStream(
                      new FileInputStream(
                         "/Users/dreamli/Workspace/MyRepository/javafamily/office-product/src/main/resources/static/jf.png"),
@@ -49,7 +46,15 @@ class PictureRenderTests {
                      .center()
                      .create());
 
+                  // svg
                   put("svgImg", "https://img.shields.io/badge/jdk-1.6%2B-orange.svg");
+
+                  // Java BufferedImage
+                  final BufferedImage bufImg = new BufferedImage(300, 300, TYPE_INT_RGB);
+                  final Graphics graphics = bufImg.getGraphics();
+
+                  graphics.setFont(new Font(null, Font.BOLD, 20));
+                  graphics.drawString("Buffered Image By Java", 10, 150);
 
                   put("bufImg", Pictures.ofBufferedImage(bufImg, PictureType.PNG).create());
                }
