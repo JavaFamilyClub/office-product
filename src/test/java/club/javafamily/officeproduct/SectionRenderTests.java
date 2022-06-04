@@ -1,18 +1,18 @@
 package club.javafamily.officeproduct;
 
+import club.javafamily.officeproduct.vo.SectionItemVo;
 import com.deepoove.poi.XWPFTemplate;
-import com.deepoove.poi.data.NumberingFormat;
-import com.deepoove.poi.data.Numberings;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.io.ClassPathResource;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.util.Arrays;
 import java.util.HashMap;
 
 @Slf4j
-class ListRenderTests {
+class SectionRenderTests {
 
    /**
     * @throws Exception
@@ -21,7 +21,7 @@ class ListRenderTests {
    void testRender() throws Exception {
       // 模板文件
       final ClassPathResource templateResource
-         = new ClassPathResource("4listTemplate.docx");
+         = new ClassPathResource("5sectionTemplate.docx");
 
       XWPFTemplate template = XWPFTemplate
       // 编译模板
@@ -31,39 +31,35 @@ class ListRenderTests {
          // 渲染模板可以通过 Map 或者 POJO
          new HashMap<String, Object>() {
             {
-               put("listDecimal", Numberings.ofDecimal("item1",
-                  "item2",
-                  "item3")
-                  .create());
+               // False或空集合
+               put("section1", false);
 
-               put("listDp", Numberings.ofDecimalParentheses("item1",
-                  "item2",
-                  "item3")
-                  .create());
+               // 非False且不是集合
+               put("section2", "JavaFamily");
 
-               put("listBullet", Numberings.of("item1",
-                  "item2",
-                  "item3")
-                  .create());
+               // 非空集合
+               put("section3", Arrays.asList(4, 5, 6, 7));
 
-               put("listLl", Numberings.of(NumberingFormat.LOWER_LETTER)
-                  .addItem("item1")
-                  .addItem("item2")
-                  .addItem("item3")
-                  .create());
+               // 作用域测试
+               // 定义一个变量, 在 section 标签内引用
+               put("scope", "global");
 
-               put("listLr", Numberings.of(NumberingFormat.LOWER_ROMAN)
-                  .addItem("item1")
-                  .addItem("item2")
-                  .addItem("item3")
-                  .create());
+               put("section4", Arrays.asList(
+                  SectionItemVo.builder()
+                     .age(12)
+                     .name("Item1")
+                     .build(),
+                  SectionItemVo.builder()
+                     .age(13)
+                     .name("Item2")
+                     .build(),
+                  SectionItemVo.builder()
+                     .age(14)
+                     .name("Item3")
+                     .build()));
 
-               put("listUl", Numberings.of(NumberingFormat.UPPER_LETTER)
-                  .addItem("item1")
-                  .addItem("item2")
-                  .addItem("item3")
-                  .create());
-
+               // section 值为 true 时, 标签内可以引用到标签外的变量
+               put("section5", true);
             }
          }
       );

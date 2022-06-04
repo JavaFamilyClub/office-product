@@ -1,18 +1,18 @@
 package club.javafamily.officeproduct;
 
+import club.javafamily.officeproduct.vo.SectionItemVo;
 import com.deepoove.poi.XWPFTemplate;
-import com.deepoove.poi.data.NumberingFormat;
-import com.deepoove.poi.data.Numberings;
+import com.deepoove.poi.data.Includes;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.io.ClassPathResource;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.util.HashMap;
+import java.util.*;
 
 @Slf4j
-class ListRenderTests {
+class NestedRenderTests {
 
    /**
     * @throws Exception
@@ -21,7 +21,10 @@ class ListRenderTests {
    void testRender() throws Exception {
       // 模板文件
       final ClassPathResource templateResource
-         = new ClassPathResource("4listTemplate.docx");
+         = new ClassPathResource("6-1nestedTemplate.docx");
+
+      final ClassPathResource subTemplateResource
+         = new ClassPathResource("6-2nestedSubTemplate.docx");
 
       XWPFTemplate template = XWPFTemplate
       // 编译模板
@@ -31,39 +34,20 @@ class ListRenderTests {
          // 渲染模板可以通过 Map 或者 POJO
          new HashMap<String, Object>() {
             {
-               put("listDecimal", Numberings.ofDecimal("item1",
-                  "item2",
-                  "item3")
-                  .create());
 
-               put("listDp", Numberings.ofDecimalParentheses("item1",
-                  "item2",
-                  "item3")
-                  .create());
+               final List<SectionItemVo> subData = Arrays.asList(
+                  SectionItemVo.builder()
+                     .age(12)
+                     .name("Item1")
+                     .build(),
+                  SectionItemVo.builder()
+                     .age(13)
+                     .name("Item2")
+                     .build());
 
-               put("listBullet", Numberings.of("item1",
-                  "item2",
-                  "item3")
+               put("nested", Includes.ofStream(subTemplateResource.getInputStream())
+                  .setRenderModel(subData)
                   .create());
-
-               put("listLl", Numberings.of(NumberingFormat.LOWER_LETTER)
-                  .addItem("item1")
-                  .addItem("item2")
-                  .addItem("item3")
-                  .create());
-
-               put("listLr", Numberings.of(NumberingFormat.LOWER_ROMAN)
-                  .addItem("item1")
-                  .addItem("item2")
-                  .addItem("item3")
-                  .create());
-
-               put("listUl", Numberings.of(NumberingFormat.UPPER_LETTER)
-                  .addItem("item1")
-                  .addItem("item2")
-                  .addItem("item3")
-                  .create());
-
             }
          }
       );
